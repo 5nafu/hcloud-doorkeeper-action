@@ -46,7 +46,6 @@ runs:
       if: ${{ inputs.autoclean == 'true' }} 
       with:
         run: |
-          export HCLOUD_TOKEN="${{ inputs.hcloud_token }}"
           hcloud firewall delete-rule \
           ${{ inputs.firewall_name }} \
           --direction in \
@@ -54,3 +53,5 @@ runs:
           --protocol ${{ inputs.protocol }} \
           --source-ips ${{ steps.set_IP.outputs.source_ip }} \
           --description "Created by 'Hetzner Cloud Doorkeeper' GitHub action in Workflow-Run: '${{ github.workflow }}/${{ github.run_number }}/${{ github.run_attempt }}' from ${{ github.repository	}}"
+      env:
+        HCLOUD_TOKEN: ${{ inputs.hcloud_token }} 
