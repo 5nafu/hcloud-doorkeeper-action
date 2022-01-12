@@ -1,0 +1,56 @@
+name: 'Hetzner Cloud Doorkeeper'
+description: 'Open and closes a specific IP/Port on a Hetzner Cloud firewall'
+inputs:
+  hcloud_token:
+    description: 'Hetzner Cloud token to access the Firewall'
+    required: true
+  firewall_name:
+    description: 'Name of firewall to configure'
+    required: true
+  ip:
+    description: 'CIDR representation of IP range to allow access (Defaults to current runner IP)'
+    required: false
+  port:
+    description: 'Port to open'
+    required: false
+    default: 22
+  protocol:
+    description: 'Protocol for the above port. Either `tcp` or `udp`'
+    required: false
+    default: 'tcp'
+  autoclean:
+    description: 'Automatically clean up the opened port after the workflow finishes'
+    required: false
+    default: true
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-hcloud@v1
+    - id: set_IP
+      run: |
+        [[ -n "${{ inputs.ip }}" ]] && source_IP=${{ inputs.ip }}" || source_IP="$(curl -s https://ifconfig.me/ip)/32" && echo "echo "::set-output name=source_ip::$source_IP"
+      shell: bash
+    - run: |
+        hcloud firewall add-rule \
+        ${{ inputs.firewall_name }} \
+        --direction in \
+        --port ${{ inputs.port }}
+        --protocol ${{ inputs.protocol }} 
+        --source-ips ${{ steps.set_IP.outputs.source_ip }}
+        --description "Created by 'Hetzner Cloud Doorkeeper' GitHub action from ${{ github.repository	}}, Workflow-Run ${{ github.workflow }}/${{ github.run_number }}/${{ github.run_attempt }}"
+      env:
+        HCLOUD_TOKEN: ${{ inputs.hcloud_token }} 
+      shell: bash
+    - uses: webiny/action-post-run@2.0.1
+      id: post-run-command
+      if: ${{ inputs.autoclean == true }} 
+      with:
+        run: |
+          export HCLOUD_TOKEN="${{ inputs.hcloud_token }}"
+          hcloud firewall delete-rule \
+          ${{ inputs.firewall_name }} \
+          --direction in \
+          --port ${{ inputs.port }}
+          --protocol ${{ inputs.protocol }} 
+          --source-ips ${{ steps.set_IP.outputs.source_ip }}
+          --description "Created by 'Hetzner Cloud Doorkeeper' GitHub action from ${{ github.repository	}}, Workflow-Run ${{ github.workflow }}/${{ github.run_number }}/${{ github.run_attempt }}"
