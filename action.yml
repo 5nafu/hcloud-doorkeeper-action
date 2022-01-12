@@ -43,7 +43,7 @@ runs:
       shell: bash
     - uses: webiny/action-post-run@2.0.1
       id: post-run-command
-      if: ${{ inputs.autoclean == true }} 
+      if: ${{ inputs.autoclean == 'true' }} 
       with:
         run: |
           export HCLOUD_TOKEN="${{ inputs.hcloud_token }}"
