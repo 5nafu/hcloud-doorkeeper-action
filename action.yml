@@ -28,15 +28,15 @@ runs:
     - uses: 3bit/setup-hcloud@v1
     - id: set_IP
       run: |
-        [[ -n "${{ inputs.ip }}" ]] && source_IP=${{ inputs.ip }}" || source_IP="$(curl -s https://ifconfig.me/ip)/32" && echo "::set-output name=source_ip::$source_IP"
+        [[ -n "${{ inputs.ip }}" ]] && source_IP="${{ inputs.ip }}" || source_IP="$(curl -s https://ifconfig.me/ip)/32" && echo "::set-output name=source_ip::$source_IP"
       shell: bash
     - run: |
         hcloud firewall add-rule \
         ${{ inputs.firewall_name }} \
         --direction in \
-        --port ${{ inputs.port }}
-        --protocol ${{ inputs.protocol }} 
-        --source-ips ${{ steps.set_IP.outputs.source_ip }}
+        --port ${{ inputs.port }} \
+        --protocol ${{ inputs.protocol }} \
+        --source-ips ${{ steps.set_IP.outputs.source_ip }} \
         --description "Created by 'Hetzner Cloud Doorkeeper' GitHub action from ${{ github.repository	}}, Workflow-Run ${{ github.workflow }}/${{ github.run_number }}/${{ github.run_attempt }}"
       env:
         HCLOUD_TOKEN: ${{ inputs.hcloud_token }} 
@@ -50,7 +50,7 @@ runs:
           hcloud firewall delete-rule \
           ${{ inputs.firewall_name }} \
           --direction in \
-          --port ${{ inputs.port }}
-          --protocol ${{ inputs.protocol }} 
-          --source-ips ${{ steps.set_IP.outputs.source_ip }}
+          --port ${{ inputs.port }} \
+          --protocol ${{ inputs.protocol }} \
+          --source-ips ${{ steps.set_IP.outputs.source_ip }} \
           --description "Created by 'Hetzner Cloud Doorkeeper' GitHub action from ${{ github.repository	}}, Workflow-Run ${{ github.workflow }}/${{ github.run_number }}/${{ github.run_attempt }}"
