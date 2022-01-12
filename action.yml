@@ -37,7 +37,7 @@ runs:
         --port ${{ inputs.port }} \
         --protocol ${{ inputs.protocol }} \
         --source-ips ${{ steps.set_IP.outputs.source_ip }} \
-        --description Created by Hetzner Cloud Doorkeeper GitHub action in Workflow-Run: ${{ github.workflow }}/${{ github.run_number }}/${{ github.run_attempt }} from ${{ github.repository	}}
+        --description Doorkeeper_Rule-${{ github.repository	}}-${{ github.workflow }}/${{ github.run_number }}/${{ github.run_attempt }}
       env:
         HCLOUD_TOKEN: ${{ inputs.hcloud_token }} 
       shell: bash
@@ -52,6 +52,6 @@ runs:
           --port ${{ inputs.port }} \
           --protocol ${{ inputs.protocol }} \
           --source-ips ${{ steps.set_IP.outputs.source_ip }} \
-          --description Created by Hetzner Cloud Doorkeeper GitHub action in Workflow-Run: ${{ github.workflow }}/${{ github.run_number }}/${{ github.run_attempt }} from ${{ github.repository	}}
+          --description Doorkeeper_Rule-${{ github.repository	}}-${{ github.workflow }}/${{ github.run_number }}/${{ github.run_attempt }}
       env:
         HCLOUD_TOKEN: ${{ inputs.hcloud_token }} 
