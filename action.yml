@@ -28,7 +28,7 @@ runs:
     - uses: 3bit/setup-hcloud@v1
     - id: set_IP
       run: |
-        [[ -n "${{ inputs.ip }}" ]] && source_IP=${{ inputs.ip }}" || source_IP="$(curl -s https://ifconfig.me/ip)/32" && echo "echo "::set-output name=source_ip::$source_IP"
+        [[ -n "${{ inputs.ip }}" ]] && source_IP=${{ inputs.ip }}" || source_IP="$(curl -s https://ifconfig.me/ip)/32" && echo "::set-output name=source_ip::$source_IP"
       shell: bash
     - run: |
         hcloud firewall add-rule \
