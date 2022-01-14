@@ -26,7 +26,7 @@ esac
 echo /usr/local/bin/hcloud firewall $ACTION \
     $INPUT_FIREWALL_NAME \
     --direction in \
-    --port ${{ INPUT_PORT }} \
+    --port $INPUT_PORT \
     --protocol $INPUT_PROTOCOL \
     --source-ips $IP_RANGE \
     --description Doorkeeper Rule - Repository $GITHUB_REPOSITORY - Workflow: $GITHUB_WORKFLOW/$GITHUB_RUN_NUMBER/$GITHUB_RUN_ATTEMPT
