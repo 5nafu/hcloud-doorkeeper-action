@@ -23,35 +23,15 @@ inputs:
     required: false
     default: true
 runs:
-  using: "composite"
-  steps:
-    - uses: 3bit/setup-hcloud@v1
-    - id: set_IP
-      run: |
-        [[ -n "${{ inputs.ip }}" ]] && source_IP="${{ inputs.ip }}" || source_IP="$(curl -s https://ifconfig.me/ip)/32" && echo "::set-output name=source_ip::$source_IP"
-      shell: bash
-    - run: |
-        hcloud firewall add-rule \
-        ${{ inputs.firewall_name }} \
-        --direction in \
-        --port ${{ inputs.port }} \
-        --protocol ${{ inputs.protocol }} \
-        --source-ips ${{ steps.set_IP.outputs.source_ip }} \
-        --description Doorkeeper_Rule-${{ github.repository	}}-${{ github.workflow }}/${{ github.run_number }}/${{ github.run_attempt }}
-      env:
-        HCLOUD_TOKEN: ${{ inputs.hcloud_token }} 
-      shell: bash
-    - uses: webiny/action-post-run@2.0.1
-      id: post-run-command
-      if: ${{ inputs.autoclean == 'true' }} 
-      with:
-        run: |
-          hcloud firewall delete-rule \
-          ${{ inputs.firewall_name }} \
-          --direction in \
-          --port ${{ inputs.port }} \
-          --protocol ${{ inputs.protocol }} \
-          --source-ips ${{ steps.set_IP.outputs.source_ip }} \
-          --description Doorkeeper_Rule-${{ github.repository	}}-${{ github.workflow }}/${{ github.run_number }}/${{ github.run_attempt }}
-      env:
-        HCLOUD_TOKEN: ${{ inputs.hcloud_token }} 
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.hcloud_token }} 
+    - ${{ inputs.firewall_name }} \
+    - ${{ inputs.port }} \
+    - ${{ inputs.protocol }} \
+    - ${{ steps.set_IP.outputs.source_ip }} \
+    - Doorkeeper_Rule-${{ github.repository	}}-${{ github.workflow }}/${{ github.run_number }}/${{ github.run_attempt }}
+  post-entrypoint: 'delete.sh'
+  env:
+    HCLOUD_TOKEN: ${{ inputs.hcloud_token }} 
