@@ -30,7 +30,7 @@ runs:
     - "-p ${{ inputs.port }}"
     - "-t ${{ inputs.protocol }}"
     - "-i ${{ inputs.outputs.source_ip }}"
-  post-entrypoint: 'delete.sh'
+  post-entrypoint: '/delete.sh'
   #post-if: ${{ inputs.autoclean == 'true' }}
   env:
     DK_HCLOUD_TOKEN: ${{ inputs.hcloud_token }} 
