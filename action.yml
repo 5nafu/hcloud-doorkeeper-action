@@ -30,8 +30,7 @@ runs:
     - ${{ inputs.firewall_name }} \
     - ${{ inputs.port }} \
     - ${{ inputs.protocol }} \
-    - ${{ steps.set_IP.outputs.source_ip }} \
-    - Doorkeeper_Rule-${{ github.repository	}}-${{ github.workflow }}/${{ github.run_number }}/${{ github.run_attempt }}
+    - ${{ inputs.outputs.source_ip }} \
   post-entrypoint: 'delete.sh'
   post-if: inputs.autoclean == 'true'
   env:
