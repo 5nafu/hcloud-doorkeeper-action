@@ -1,8 +1,5 @@
 #! /bin/sh
 
-echo "Env:"
-env
-echo "----------------------------"
 if [[ -n "$INPUT_IP" ]]; then
     IP_RANGE="$INPUT_IP"
 else
@@ -23,7 +20,7 @@ case $0 in
         ;;
 esac
 
-echo /usr/local/bin/hcloud firewall $ACTION \
+/usr/local/bin/hcloud firewall $ACTION \
     $INPUT_FIREWALL_NAME \
     --direction in \
     --port $INPUT_PORT \
