@@ -25,12 +25,7 @@ inputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
-    - "-n ${{ inputs.firewall_name }}"
-    - "-p ${{ inputs.port }}"
-    - "-t ${{ inputs.protocol }}"
-    - "-i ${{ inputs.outputs.source_ip }}"
   post-entrypoint: '/delete.sh'
   #post-if: ${{ inputs.autoclean == 'true' }}
   env:
-    DK_HCLOUD_TOKEN: ${{ inputs.hcloud_token }} 
+    HCLOUD_TOKEN: ${{ inputs.hcloud_token }} 
