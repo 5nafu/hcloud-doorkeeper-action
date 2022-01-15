@@ -3,6 +3,8 @@ This GitHub action opens and closes a port for a specific IP(range) in a Hetzner
 
 By default the opened port is automatically being closed in a post script running after any `main:`steps.
 
+The Rules are uniquely named like "Doorkeeper Rule - Repository `REPOSITORY` - Workflow: `WORKFLOW`/`RUN_NUMBER`/`RUN_ATTEMPT`" so not to disturb existing rules and to allow multiple workflows to run simultaneously.
+
 ## Limits and Dependencies
 
 ### Runtime
@@ -71,3 +73,33 @@ jobs:
         port: 443
         protocol: tcp
 ```
+
+## Development
+
+### Requirements
+
+* a copy of this source code
+* a running docker daemon
+* a [Hetzner cloud account](https://console.hetzner.cloud/) with [API token](https://docs.hetzner.cloud/#getting-started) (read/write!) and an (empty) firewall
+
+### Developing
+
+Find the main and post action scripts in the `scripts` directory; 
+
+The `install.sh` script in the same diretory is used to install wget, the hcloud cli and the post script into the container image. You can modify other internals of the image in the `Dockerfile`.
+
+Please consult the `action.yml` for modifications of input variables or other meta and control information.
+
+You can then build the image with 
+
+``` bash
+# From the git root diretory 
+$ docker build -t hcloud-doorkeeper .
+```
+
+### Testing
+
+* Update the [`env.example`](env.example) file to your desire
+* Run the main action `docker run --rm -it --env-file env.example --env HCLOUD_TOKEN=YOURTOKEN hcloud-doorkeeper`to create a firewall rule
+* Run the post action `docker run --rm -it --env-file env.example --env HCLOUD_TOKEN=YOURTOKEN --entrypoint delete.sh hcloud-doorkeeper` to delete the rule
+* To start an interactive shell, use `docker run --rm -it --entrypoint bash hcloud-doorkeeper`
