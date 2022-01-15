@@ -15,7 +15,8 @@ API="https://api.github.com/repos/hetznercloud/cli/releases/latest"
 HCLOUD_VERSION=$(wget -q -O- $API  | grep '"tag_name":'| cut -d'"' -f4)
 ARCH=$(uname -m)
 case $ARCH in
-    "aarch64") ARCH=arm64
+    "aarch64") ARCH=arm64;;
+    "x86_64") ARCH=amd64;;
 esac
 
 echo "Downloading '$ARCH' hcloud, version '$HCLOUD_VERSION', from GitHub..."
