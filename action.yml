@@ -1,5 +1,7 @@
 name: 'Hetzner Cloud Doorkeeper'
 description: 'Open and closes a specific IP/Port on a Hetzner Cloud firewall'
+branding.color: orange
+branding.icon: shield
 inputs:
   hcloud_token:
     description: 'Hetzner Cloud token to access the Firewall'
