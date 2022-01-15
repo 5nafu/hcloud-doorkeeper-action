@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Install wget
 export DEBIAN_FRONTEND=noninteractive
