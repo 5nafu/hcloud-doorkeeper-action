@@ -1,14 +1,5 @@
 #! /bin/bash
 
-if [[ -n "$INPUT_IP" ]]; then
-    echo "IP address supplied..."
-    IP_RANGE="$INPUT_IP"
-else
-    echo "Getting Public IP..."
-    IP_RANGE="$(wget -O- -q http://ifconfig.me/ip )/32"
-fi
-echo "IP_RANGE: '$IP_RANGE'"
-
 case $0 in
     *create.sh)
         ACTION=add-rule
@@ -21,6 +12,12 @@ case $0 in
         fi
         ;;
 esac
+
+if [[ -n "$INPUT_IP" ]]; then
+    IP_RANGE="$INPUT_IP"
+else
+    IP_RANGE="$(wget -O- -q http://ifconfig.me/ip )/32"
+fi
 
 /usr/local/bin/hcloud firewall $ACTION \
     $INPUT_FIREWALL_NAME \

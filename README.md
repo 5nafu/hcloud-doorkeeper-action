@@ -1,17 +1,15 @@
 # hcloud-doorkeeper-action
-This GitHub action opens and closes a port for a specific IP in a Hetzner Cloud firewall. This allows access to "internal" resources for the current github runner.
+This GitHub action opens and closes a port for a specific IP(range) in a Hetzner Cloud firewall. This allows access to "internal" resources for the current github runner.
 
 By default the opened port is automatically being closed in a post script running after any `main:`steps.
 
 ## Limits and Dependencies
 
 ### Runtime
-* Requires a **linux** based github runner
-* A valid hcloud token and an existing hcloud firewall are required
 
-### Internal
-* The `3bit/setup-hcloud` action is used internally to setup the required tooling
-* The `webiny/action-post-run` action is used internally to autoclean the firewall
+* Requires a github runner with docker capabilities
+* A valid hcloud token and an existing hcloud firewall are required
+* If the IP address is to be determined dynamically, a connection to [ifconfig.me](http://ifconfig.me) is required
 
 ## Inputs
 
@@ -19,10 +17,12 @@ By default the opened port is automatically being closed in a post script runnin
 | ----- | -------- | ------- | ----------- |
 | **`hcloud_token`** | True | | Hetzner Cloud token to access the Firewall |
 | **`firewall_name`** | True | | Name of firewall to configure |
-| `ip`| False | current runner IP* | Which IP to allow access |
+| `ip`| False | current runner IP* | Which IP(range) to allow access; in [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing) notation |
 | `port`| False | 22 | Port to open |
 | `protocol`| False | tcp | Protocol for the aboce port. Either `tcp` or `udp` |
 | `autoclean` | False | True |  Automatically clean up the opened port after the workflow finishes |
+
+*) as determined by a call to http://ifconfig.me/ip
 
 ## Examples
 
