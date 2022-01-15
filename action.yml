@@ -1,5 +1,7 @@
 name: 'Hetzner Cloud Doorkeeper'
 description: 'Open and closes a specific IP/Port on a Hetzner Cloud firewall'
+branding.color: orange
+branding.icon: shield
 inputs:
   hcloud_token:
     description: 'Hetzner Cloud token to access the Firewall'
@@ -23,34 +25,9 @@ inputs:
     required: false
     default: true
 runs:
-  using: "composite"
-  steps:
-    - uses: 3bit/setup-hcloud@v1
-    - id: set_IP
-      run: |
-        [[ -n "${{ inputs.ip }}" ]] && source_IP="${{ inputs.ip }}" || source_IP="$(curl -s https://ifconfig.me/ip)/32" && echo "::set-output name=source_ip::$source_IP"
-      shell: bash
-    - run: |
-        hcloud firewall add-rule \
-        ${{ inputs.firewall_name }} \
-        --direction in \
-        --port ${{ inputs.port }} \
-        --protocol ${{ inputs.protocol }} \
-        --source-ips ${{ steps.set_IP.outputs.source_ip }} \
-        --description "Created by 'Hetzner Cloud Doorkeeper' GitHub action in Workflow-Run: '${{ github.workflow }}/${{ github.run_number }}/${{ github.run_attempt }}' from ${{ github.repository	}}"
-      env:
-        HCLOUD_TOKEN: ${{ inputs.hcloud_token }} 
-      shell: bash
-    - uses: webiny/action-post-run@2.0.1
-      id: post-run-command
-      if: ${{ inputs.autoclean == 'true' }} 
-      with:
-        run: |
-          export HCLOUD_TOKEN="${{ inputs.hcloud_token }}"
-          hcloud firewall delete-rule \
-          ${{ inputs.firewall_name }} \
-          --direction in \
-          --port ${{ inputs.port }} \
-          --protocol ${{ inputs.protocol }} \
-          --source-ips ${{ steps.set_IP.outputs.source_ip }} \
-          --description "Created by 'Hetzner Cloud Doorkeeper' GitHub action in Workflow-Run: '${{ github.workflow }}/${{ github.run_number }}/${{ github.run_attempt }}' from ${{ github.repository	}}"
+  using: 'docker'
+  image: 'Dockerfile'
+  post-entrypoint: 'delete.sh'
+  #post-if: ${{ inputs.autoclean == 'true' }}
+  env:
+    HCLOUD_TOKEN: ${{ inputs.hcloud_token }} 
