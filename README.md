@@ -106,6 +106,13 @@ $ docker build -t hcloud-doorkeeper .
 ### Testing
 
 * Update the [`env.example`](env.example) file to your desire
-* Run the main action `docker run --rm -it --env-file env.example --env HCLOUD_TOKEN=YOURTOKEN hcloud-doorkeeper`to create a firewall rule
-* Run the post action `docker run --rm -it --env-file env.example --env HCLOUD_TOKEN=YOURTOKEN --entrypoint delete.sh hcloud-doorkeeper` to delete the rule
+  > :warning: **To prevent accidental token leakage**, the API token should **not** be added to the environment file, but be declared on the commandline.
+* Run the main action to create a firewall rule
+  ```
+  docker run --rm -it --env-file env.example --env HCLOUD_TOKEN=YOURTOKEN hcloud-doorkeeper
+  ```
+* Run the post action to delete the rule
+  ```
+  docker run --rm -it --env-file env.example --env HCLOUD_TOKEN=YOURTOKEN --entrypoint delete.sh hcloud-doorkeeper
+  ``` 
 * To start an interactive shell, use `docker run --rm -it --entrypoint bash hcloud-doorkeeper`
