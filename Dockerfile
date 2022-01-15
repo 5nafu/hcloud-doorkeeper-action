@@ -1,12 +1,11 @@
 # Container image that runs your code
-FROM boky/hcloud AS hcloud
-FROM alpine:3.10
+FROM debian:11-slim
 
-COPY --from=hcloud /hcloud /usr/local/bin/hcloud
+ARG TARGETOS 
+ARG TARGETARCH
 
-COPY create.sh /create.sh
-RUN ln -s /create.sh /delete.sh
+COPY scripts/ /usr/local/bin/
+RUN /usr/local/bin/install.sh
 
-# Code file to execute when the docker container starts up (`entrypoint.sh`)
-ENTRYPOINT ["/create.sh"]
+ENTRYPOINT ["create.sh"]
               
