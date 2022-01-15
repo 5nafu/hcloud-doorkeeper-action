@@ -25,7 +25,7 @@ inputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  post-entrypoint: '/delete.sh'
+  post-entrypoint: 'delete.sh'
   #post-if: ${{ inputs.autoclean == 'true' }}
   env:
     HCLOUD_TOKEN: ${{ inputs.hcloud_token }} 
