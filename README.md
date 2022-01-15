@@ -50,6 +50,9 @@ jobs:
         port: 1234
         protocol: tcp
         autoclean: false
+    # Your own steps... for example
+    - run: sleep 30s
+      shell: bash
 ```
 
 ### *Temporarily* allow the current GitHub runner to access port 443/tcp
@@ -72,6 +75,9 @@ jobs:
         firewall_name: MyFirewall
         port: 443
         protocol: tcp
+    # Your own steps... for example
+    - run: sleep 30s
+      shell: bash
 ```
 
 ## Development
